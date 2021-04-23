@@ -8,8 +8,7 @@ EC327 Project: Instructions to Start Game
 
 3) The player joining the game should enter their IP address in the command line when prompted:
 
-> ip addr
-The line above in the command line should return your ip address along with some additional information
+Entering "ip addr" in the command line should return your ip address along with some additional information
 
-Locate your ip address from the following line:
+Locate your ip address from the output of "ip addr":
 inet [IP ADDRESS HERE]/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3
