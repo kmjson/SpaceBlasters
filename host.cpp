@@ -1,7 +1,6 @@
 // Copyright 2021 J.Carruthers jbc@bu.edu
+// This is the main file of the Space Blaster.
 
-// socket programming using UDP and SFML
-// g++ networking_send.cpp -l sfml-network -o sendmsg
 
 #include<iostream>
 #include<string>
@@ -35,13 +34,13 @@ bool your_turn;
 int your_hp = 17;
 int opponent_hp = 17;
 
-sf::RenderWindow window(sf::VideoMode(825, 550), "Battleship", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(825, 550), "Space Blaster", sf::Style::Titlebar | sf::Style::Close);
+
 
 
 
 // function for placing ship interaction in the beginning of the game.
-// get_on_grid (bool), update_grid is used
-
+// Depending on the rotation, 
 void place_ship(int x, int y) {
   int size = ship_sizes.at(ships_placed);
   int col = (x - 25) / 50;
@@ -101,8 +100,11 @@ void place_ship(int x, int y) {
 
 
 // function for drawing updated grids
-// Each two grids have Idle, Hit, Miss and Ships status.
-// 
+// In the game, there are two grids. Big grid on the left representing enemy's field, small grid on the right representing user's field
+// The field contains 100 hitboxes and status of the hitbox will be stored as a char.
+// Hitboxes have four status : Idle ('o'), Hit('h'), Miss('m') and Ships('C','B','c','S','D').
+// Each status are presented with colors: White, Red, Yellow and gray.
+
 void draw() {
   window.clear();
   vector<char> main_vector = main_grid.get_grid();
@@ -130,6 +132,8 @@ void draw() {
     }
     window.draw(square);
   }
+
+  // Second grid creation and define the color of hitbox status.
 
   vector<char> second_vector = second_grid.get_grid();
   for (int i = 0; i < 100; i++) {
@@ -162,7 +166,6 @@ void draw() {
 
 
 //Main function. Initiation of the game is described in this function.
-//
 
 
 int main(int argc, char **argv) {
@@ -230,16 +233,10 @@ int main(int argc, char **argv) {
         // int x = event.mouseButton.x;
         // int y = event.mouseButton.y;
         switch (event.key.code) {
+        
+        // Definition of Overall Left click events
         case sf::Mouse::Left:
           cout << "Left " << x << " " << y << "\n";
-
-
-
-          //Overall left click events.
-
-
-
-
 
           //Left click events during the create/join phase.
           if (waiting) {
@@ -257,10 +254,11 @@ int main(int argc, char **argv) {
           } else if (ships_placed < 5 && main_grid.on_grid(x, y)) {
             //left click event during ship placing phase
             place_ship(x, y);
-          } else {
-            //Left click event during user's turn
-            //if !your_turn, there is no click event so user have to wait until user's turn.
 
+          } else {
+
+            //Left click event that activates only in the user's turn
+            //if !your_turn, there is no click event so user have to wait until user's turn.
             if (your_turn && main_grid.is_empty(x, y)) {
               int col = (x - 25) / 50;
               int row = (y - 25) / 50;
@@ -307,9 +305,6 @@ int main(int argc, char **argv) {
 
 
     // The window starts with "waiting" value as TRUE, so This function is the first function that appears to the user.
-
-
-
     //Create U.I of create/join room and initiate the listener to establish the networking property.
     else if (waiting) {
       create_room.setPosition(110, 250);
@@ -464,7 +459,8 @@ int main(int argc, char **argv) {
 
 
 
-      //when 5 ships are placed, send "r" to let enemy know the user is ready.
+      // When 5 ships are placed and user's field is finalized, send "r" to let enemy know the user is ready to play.
+      // When "r" is recieved so enemy is also ready, pass the first grid vector into second grid and initiate "playing" status
       else if (ships_placed == 5) {
         socket.send("r", 2);
         socket.receive(&buffer, sizeof(buffer), received);
@@ -482,7 +478,7 @@ int main(int argc, char **argv) {
 
 
 
-      //Logic when it is not your turn. Clicking properties are not included to make user unavailable to control until enemy turn is done.
+      //Logic when it is not your turn.
       //Recieve hit point from enemy, resend the result to enemy, and update the grid.
       //if ship is hit, check if the life remains and end the game if life is 0.
       //Otherwise, "your turn" status turns on.
