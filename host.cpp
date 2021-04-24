@@ -17,6 +17,7 @@ using std::stoi;
 using std::vector;
 using std::string;
 
+
 bool waiting;
 bool created;
 bool joining;
@@ -35,6 +36,14 @@ int your_hp = 17;
 int opponent_hp = 17;
 
 sf::RenderWindow window(sf::VideoMode(825, 550), "Battleship", sf::Style::Titlebar | sf::Style::Close);
+
+
+//mouse pointer will be tracked constantly with position of X and Y
+
+
+
+// function for placing ship interaction in the beginning of the game.
+// get_on_grid (bool), update_grid is used
 
 void place_ship(int x, int y) {
   int size = ship_sizes.at(ships_placed);
@@ -91,6 +100,12 @@ void place_ship(int x, int y) {
   }
 }
 
+
+
+
+// function for drawing updated grids
+// Each two grids have Idle, Hit, Miss and Ships status.
+// 
 void draw() {
   window.clear();
   vector<char> main_vector = main_grid.get_grid();
@@ -146,8 +161,17 @@ void draw() {
   }
 }
 
+
+
+
+//Main function. Initiation of the game is described in this function.
+//
+
+
 int main(int argc, char **argv) {
 
+
+  //setting variables, loading textures and files.
   waiting = true;
   created = false;
   joining = false;
@@ -181,10 +205,20 @@ int main(int argc, char **argv) {
   if (!water.loadFromFile("water.png"))
     return -1;
 
+
+
+
+
+  // Game initiation
+
+
   // sf::RenderWindow window(sf::VideoMode(825, 550), "Battleship", sf::Style::Titlebar | sf::Style::Close);
   while (window.isOpen()) {
     window.clear();
 
+
+
+    // The user's mouse will be tracked constatnly with Postion X and Y.
     sf::Vector2i position = sf::Mouse::getPosition(window);
     int x = position.x;
     int y = position.y;
@@ -201,6 +235,16 @@ int main(int argc, char **argv) {
         switch (event.key.code) {
         case sf::Mouse::Left:
           cout << "Left " << x << " " << y << "\n";
+
+
+
+          //Overall left click events.
+
+
+
+
+
+          //Left click events during the create/join phase.
           if (waiting) {
             if (x < 412) {
               waiting = false;
@@ -210,9 +254,16 @@ int main(int argc, char **argv) {
               waiting = false;
               joining = true;
             }
+
+
+
           } else if (ships_placed < 5 && main_grid.on_grid(x, y)) {
+            //left click event during ship placing phase
             place_ship(x, y);
           } else {
+            //Left click event during user's turn
+            //if !your_turn, there is no click event so user have to wait until user's turn.
+
             if (your_turn && main_grid.is_empty(x, y)) {
               int col = (x - 25) / 50;
               int row = (y - 25) / 50;
@@ -236,6 +287,10 @@ int main(int argc, char **argv) {
             }
           }
           break;
+
+
+
+        //Overall right click events. Basically it is only for rotation when placing ship
         case sf::Mouse::Right:
           cout << "Right " << x << " " << y << "\n";
           rotation = (rotation + 90) % 360;
@@ -244,8 +299,21 @@ int main(int argc, char **argv) {
       }
     }
 
+
+
+    // The end game phase. Defeat/Victory decleration will be made.
     if (end) {}
 
+
+
+
+
+
+    // The window starts with "waiting" value as TRUE, so This function is the first function that appears to the user.
+
+
+
+    //Create U.I of create/join room and initiate the listener to establish the networking property.
     else if (waiting) {
       create_room.setPosition(110, 250);
       join_room.setPosition(550, 250);
@@ -257,6 +325,7 @@ int main(int argc, char **argv) {
       window.draw(line);
       window.display();
     }
+
 
     else if (created) {
       create_room.setPosition(205, 250);
@@ -289,8 +358,16 @@ int main(int argc, char **argv) {
       }
     }
 
+
+
+
+
     else {
 
+
+
+
+      //During the ship placement phase, draw U.I of the grids. Keep update until all placed.
       if (ships_placed < 5) {
         vector<char> main_vector = main_grid.get_grid();
         for (int i = 0; i < 100; i++) {
@@ -343,6 +420,11 @@ int main(int argc, char **argv) {
           }
           window.draw(square);
         }
+
+
+
+
+        // During the ship placement phase, Show the possible ship position centered on the position of mouse pointer.
         if (main_grid.on_grid(x, y)) {
           int col = (x - 25) / 50;
           int row = (y - 25) / 50;
@@ -381,6 +463,11 @@ int main(int argc, char **argv) {
         window.display();
       }
 
+
+
+
+
+      //when 5 ships are placed, send "r" to let enemy know the user is ready.
       else if (ships_placed == 5) {
         socket.send("r", 2);
         socket.receive(&buffer, sizeof(buffer), received);
@@ -395,6 +482,13 @@ int main(int argc, char **argv) {
         }
       }
 
+
+
+
+      //Logic when it is not your turn. Clicking properties are not included to make user unavailable to control until enemy turn is done.
+      //Recieve hit point from enemy, resend the result to enemy, and update the grid.
+      //if ship is hit, check if the life remains and end the game if life is 0.
+      //Otherwise, "your turn" status turns on.
       else if (!your_turn && playing) {
         socket.receive(&buffer, sizeof(buffer), received);
         int index = stoi(buffer);
@@ -417,6 +511,11 @@ int main(int argc, char **argv) {
         window.display();
       }
 
+
+
+
+      //Logic when it is your turn.
+      //Create hover box on the grid for targeting. 
       else if (your_turn && playing) {
         if (main_grid.is_empty(x,y)) {
           int col = (x-25)/50;
@@ -435,5 +534,7 @@ int main(int argc, char **argv) {
       }
     }
   }
+
+  //end of main.
   return 0;
 }
