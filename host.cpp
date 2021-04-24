@@ -38,9 +38,6 @@ int opponent_hp = 17;
 sf::RenderWindow window(sf::VideoMode(825, 550), "Battleship", sf::Style::Titlebar | sf::Style::Close);
 
 
-//mouse pointer will be tracked constantly with position of X and Y
-
-
 
 // function for placing ship interaction in the beginning of the game.
 // get_on_grid (bool), update_grid is used
