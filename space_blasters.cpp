@@ -34,9 +34,13 @@ bool your_turn;
 int your_hp = 17;
 int opponent_hp = 17;
 
-sf::RenderWindow window(sf::VideoMode(825, 550), "Battleship", sf::Style::Titlebar | sf::Style::Close);
+sf::RenderWindow window(sf::VideoMode(825, 550), "Space Blasters", sf::Style::Titlebar | sf::Style::Close);
 string game_text;
 sf::Text game_outcome;
+
+sf::Texture bg;
+sf::Texture hit;
+sf::Sprite background;
 
 // Function for placing ship interaction in the beginning of the game.
 // Depending on the rotation.
@@ -102,6 +106,7 @@ void place_ship(int x, int y) {
 // Each status are presented with colors: White, Red, Yellow and gray.
 void draw() {
   window.clear();
+  window.draw(background);
   vector<char> main_vector = main_grid.get_grid();
   for (int i = 0; i < 100; i++) {
     sf::RectangleShape square(sf::Vector2f(50, 50));
@@ -113,9 +118,11 @@ void draw() {
       square.setFillColor(sf::Color::White);
     }
     if (main_vector.at(i) == 'h') {
-      square.setFillColor(sf::Color::Red);
+      square.setTexture(&hit);
+      square.setFillColor(sf::Color(255,100,100));
     }
     if (main_vector.at(i) == 'm') {
+      square.setTexture(&hit);
       square.setFillColor(sf::Color::Yellow);
     }
     if (main_vector.at(i) == 'C' ||
@@ -140,9 +147,11 @@ void draw() {
       square.setFillColor(sf::Color::White);
     }
     if (second_vector.at(i) == 'h') {
-      square.setFillColor(sf::Color::Red);
+      square.setTexture(&hit);
+      square.setFillColor(sf::Color(255,100,100));
     }
     if (second_vector.at(i) == 'm') {
+      square.setTexture(&hit);
       square.setFillColor(sf::Color::Yellow);
     }
     if (second_vector.at(i) == 'C' ||
@@ -171,6 +180,14 @@ void close () {
 
 // Main function. Initiation of the game is described in this function.
 int main(int argc, char **argv) {
+
+  if (!bg.loadFromFile("bg.png"))
+    return -1;
+  background.setTexture(bg);
+
+  if (!hit.loadFromFile("hitbox.png"))
+    return -1;
+
 
   // Setting variables, loading textures and files.
   waiting = true;
@@ -207,15 +224,12 @@ int main(int argc, char **argv) {
   join_room.setFillColor(sf::Color::White);
   game_outcome.setFont(font);
   game_outcome.setCharacterSize(26);
-  game_outcome.setFillColor(sf::Color::Red);
+  game_outcome.setFillColor(sf::Color::White);
   game_outcome.setPosition(550, 300);
-
-  // sf::Texture water;
-  // if (!water.loadFromFile("water.png"))
-  //   return -1;
 
   // Game initiation
   while (window.isOpen()) {
+
     window.clear();
 
     // The user's mouse will be tracked constatnly with Postion X and Y.
@@ -358,8 +372,8 @@ int main(int argc, char **argv) {
     }
 
     else {
-      
       // During the ship placement phase, draw U.I of the grids. Keep update until all placed.
+      window.draw(background);
       if (ships_placed < 5) {
         vector<char> main_vector = main_grid.get_grid();
         for (int i = 0; i < 100; i++) {
@@ -372,7 +386,8 @@ int main(int argc, char **argv) {
             square.setFillColor(sf::Color::White);
           }
           if (main_vector.at(i) == 'h') {
-            square.setFillColor(sf::Color::Red);
+            square.setTexture(&hit);
+            square.setFillColor(sf::Color(255,100,100));
           }
           if (main_vector.at(i) == 'm') {
             square.setFillColor(sf::Color::Yellow);
@@ -398,7 +413,8 @@ int main(int argc, char **argv) {
             square.setFillColor(sf::Color::White);
           }
           if (second_vector.at(i) == 'h') {
-            square.setFillColor(sf::Color::Red);
+            square.setTexture(&hit);
+            square.setFillColor(sf::Color(255,100,100));
           }
           if (second_vector.at(i) == 'm') {
             square.setFillColor(sf::Color::Yellow);
