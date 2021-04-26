@@ -250,7 +250,7 @@ int main(int argc, char **argv) {
             if (x < 412) {
               waiting = false;
               created = true;
-              cout << "socket!\n";
+              // cout << "socket!\n";
             } else {
               waiting = false;
               joining = true;
@@ -296,7 +296,7 @@ int main(int argc, char **argv) {
 
         // Overall right click events. Basically it is only for rotation when placing ship.
         case sf::Mouse::Right:
-          cout << "Right " << x << " " << y << "\n";
+          // cout << "Right " << x << " " << y << "\n";
           rotation = (rotation + 90) % 360;
           break;
         }
@@ -460,6 +460,8 @@ int main(int argc, char **argv) {
             window.draw(Destroyer);
           }
         }
+        game_outcome.setString("Get Ready For\nLaunch!");
+        window.draw(game_outcome);
         window.display();
       }
 
@@ -493,7 +495,7 @@ int main(int argc, char **argv) {
           }
         }
         int index = stoi(buffer);
-        cout << index << "\n";
+        // cout << index << "\n";
         if (second_grid.get_on_grid(index) == 'o') {
           string hit = "o";
           socket.send(hit.c_str(), 2, ip, port);
