@@ -113,7 +113,6 @@ void draw() {
     square.setPosition(25 + ((i % 10) * 50), 25 + ((i / 10) * 50));
     square.setOutlineThickness(2);
     square.setOutlineColor(sf::Color(171, 171, 171));
-    // square.setTexture(&water);
     if (main_vector.at(i) == 'o') {
       square.setFillColor(sf::Color::White);
     }
@@ -142,7 +141,6 @@ void draw() {
     square.setPosition(550 + ((i % 10) * 25), 25 + ((i / 10) * 25));
     square.setOutlineThickness(2);
     square.setOutlineColor(sf::Color(171, 171, 171));
-    // square.setTexture(&water);
     if (second_vector.at(i) == 'o') {
       square.setFillColor(sf::Color::White);
     }
@@ -373,7 +371,6 @@ int main(int argc, char **argv) {
 
     else {
       // During the ship placement phase, draw U.I of the grids. Keep update until all placed.
-      window.draw(background);
       if (ships_placed < 5) {
         vector<char> main_vector = main_grid.get_grid();
         for (int i = 0; i < 100; i++) {
@@ -381,7 +378,6 @@ int main(int argc, char **argv) {
           square.setPosition(25 + ((i % 10) * 50), 25 + ((i / 10) * 50));
           square.setOutlineThickness(2);
           square.setOutlineColor(sf::Color(171, 171, 171));
-          // square.setTexture(&water);
           if (main_vector.at(i) == 'o') {
             square.setFillColor(sf::Color::White);
           }
@@ -408,7 +404,6 @@ int main(int argc, char **argv) {
           square.setPosition(550 + ((i % 10) * 25), 25 + ((i / 10) * 25));
           square.setOutlineThickness(2);
           square.setOutlineColor(sf::Color(171, 171, 171));
-          // square.setTexture(&water);
           if (second_vector.at(i) == 'o') {
             square.setFillColor(sf::Color::White);
           }
