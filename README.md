@@ -2,7 +2,7 @@
 
 EC327 Project: Instructions to Start Game
 
-1) To play the game, each player should run host.cpp
+1) To play the game, each player should run space_blasters.cpp
 
 2) One player should select “Create game” and another player should select “Join game”
 
