@@ -1,7 +1,7 @@
-// Copyright 2021 J.Carruthers jbc@bu.edu
-
-// socket programming using UDP and SFML
-// g++ networking_send.cpp -l sfml-network -o sendmsg
+// Copyright 2021 Jason Kim jasonk@bu.edu
+// Copyright 2021 Harin Lee harinlee@bu.edu
+// Copyright 2021 Raymond Lim oscar338@bu.edu
+// Copyright 2021 Ji Young Chung jery1106@bu.edu
 
 #include<iostream>
 #include<string>
@@ -31,6 +31,7 @@ class Grid {
         vector<char> grid;
 };
 
+// Creates a grid filled with 'o'.
 void Grid::create(int x, int y, int size) {
     x_pos = x;
     y_pos = y;
@@ -40,11 +41,13 @@ void Grid::create(int x, int y, int size) {
     }
 }
 
+// Checks if a coordinate is on the grid.
 bool Grid::on_grid(int x, int y) {
     return x < x_pos + length && x >= x_pos &&
            y < y_pos + length && y >= y_pos;
 }
 
+// If a coordinate is on the grid, check what char is on that coordinate.
 char Grid::get_on_grid(int x, int y) {
     if (on_grid(x,y)) {
         int box_length = length/10;
@@ -56,10 +59,12 @@ char Grid::get_on_grid(int x, int y) {
     return '0';
 }
 
+// Check what char is on the grid based on index.
 char Grid::get_on_grid(int i) {
     return grid.at(i);
 }
 
+// Update the grid by converting the coordinate into the index and put the input character.
 void Grid::update_grid(int x, int y, char c) {
     if (on_grid(x,y)) {
         int box_length = length/10;
@@ -70,21 +75,24 @@ void Grid::update_grid(int x, int y, char c) {
     }
 }
 
+// Update the grid at index i and put the input character.
 void Grid::update_grid(int i, char c) {
    grid.at(i) = c;
 }
 
+// Getter method for the grid.
 vector<char> Grid::get_grid() {
     return grid;
 }
 
-
+// Replace grid with another grid.
 void Grid::replace_grid(vector<char> replace) {
     for (int i = 0; i < 100; i++) {
         grid.at(i) = replace.at(i);
     }
 }
 
+// Clear the grid.
 bool Grid::clear() {
     for (int i = 0; i < 100; i++) {
         grid.at(i) = 'o';
@@ -92,6 +100,7 @@ bool Grid::clear() {
     return true;
 }
 
+// Check if the grid at a given coordinate is 'o'.
 bool Grid::is_empty(int x, int y) {
     if (on_grid(x,y)) {
         int box_length = length/10;
